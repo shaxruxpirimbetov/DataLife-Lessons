@@ -8,7 +8,9 @@
       "Bash(python run.py)",
       "Bash(taskkill //F //IM python.exe //T)",
       "Bash(python \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-user-Desktop-Shax-FLASK-lesson-platform\\\\fc77c0a9-2071-4f12-8d0b-ab7d25326919\\\\scratchpad\\\\seed.py\")",
-      "Bash(python3 *)"
+      "Bash(python3 *)",
+      "Bash(.venv/Scripts/python.exe seed.py)",
+      "Bash(.venv/Scripts/python.exe -c ' *)"
     ]
   }
 }
