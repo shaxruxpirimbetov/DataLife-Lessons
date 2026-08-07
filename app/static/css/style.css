@@ -672,12 +672,23 @@ th {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: 1.6fr 1fr;
+  /* minmax(0, ...) instead of a bare fr: grid tracks default to an implicit
+     min-width equal to their content's min-content size, so a wide child
+     (the line chart) would otherwise grow the track — and the whole grid —
+     past the viewport instead of scrolling inside itself. */
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
   gap: 20px;
   align-items: start;
 }
 
 .stats-grid .card { margin-bottom: 0; }
+
+/* Scoped to desktop only so it never has to out-specificity the mobile
+   single-column collapse below (an inline style would win that fight and
+   force two too-narrow columns instead of collapsing). */
+@media (min-width: 861px) {
+  .stats-grid--reverse { grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); }
+}
 
 .card-head {
   display: flex;
@@ -775,7 +786,7 @@ th {
 }
 
 @media (max-width: 860px) {
-  .stats-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: minmax(0, 1fr); }
 }
 
 .divider { border: none; border-top: 1px solid var(--line); margin: 24px 0; }
@@ -1073,7 +1084,14 @@ body.modal-open { overflow: hidden; }
 .sidebar-close { display: none; }
 
 @media (max-width: 860px) {
-  .app-shell { flex-direction: column; }
+  /* align-items:flex-start (set for the desktop row layout, where it
+     top-aligns the sidebar and content) governs the CROSS axis, which
+     flips to horizontal once flex-direction becomes column here — left
+     unset, it stopped stretching .main-area to the viewport width, so wide
+     content (e.g. a table) grew the whole column and dragged the entire
+     page into horizontal scroll instead of just scrolling inside
+     .table-wrap. Force stretch back so content is clamped to full width. */
+  .app-shell { flex-direction: column; align-items: stretch; }
 
   .mobile-topbar {
     display: flex;

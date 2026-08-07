@@ -41,7 +41,16 @@
       "Bash(node -e \"require\\('fs'\\).readFileSync\\('app/static/js/app.js','utf8'\\)\")",
       "Bash(rm -f /tmp/cj4.txt)",
       "Bash(curl -s -c /tmp/cj4.txt -b /tmp/cj4.txt -X POST http://127.0.0.1:5000/login -d \"username=admin&password=shaxcoder12\" -o /dev/null -w \"login: %{http_code}\\\\n\")",
-      "Bash(curl -s -c /tmp/cj4.txt -b /tmp/cj4.txt http://127.0.0.1:5000/admin/students -o /tmp/students_final.html -w \"students: %{http_code}\\\\n\")"
+      "Bash(curl -s -c /tmp/cj4.txt -b /tmp/cj4.txt http://127.0.0.1:5000/admin/students -o /tmp/students_final.html -w \"students: %{http_code}\\\\n\")",
+      "Bash(.venv/Scripts/pip.exe install *)",
+      "Bash(.venv/Scripts/python.exe \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-user-Desktop-Shax-FLASK-lesson-platform\\\\c0035eda-721e-45cd-a238-c1cc3de81f8f\\\\scratchpad\\\\check_overflow.py\")",
+      "Bash(.venv/Scripts/python.exe \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-user-Desktop-Shax-FLASK-lesson-platform\\\\c0035eda-721e-45cd-a238-c1cc3de81f8f\\\\scratchpad\\\\check_overflow2.py\")",
+      "Bash(.venv/Scripts/python.exe \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-user-Desktop-Shax-FLASK-lesson-platform\\\\c0035eda-721e-45cd-a238-c1cc3de81f8f\\\\scratchpad\\\\check_overflow3.py\")",
+      "Bash(.venv/Scripts/python.exe \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-user-Desktop-Shax-FLASK-lesson-platform\\\\c0035eda-721e-45cd-a238-c1cc3de81f8f\\\\scratchpad\\\\verify_all.py\")",
+      "Bash(.venv/Scripts/python.exe \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-user-Desktop-Shax-FLASK-lesson-platform\\\\c0035eda-721e-45cd-a238-c1cc3de81f8f\\\\scratchpad\\\\check_stats.py\")",
+      "Bash(curl -s -o /dev/null -w \"health: %{http_code}\\\\n\" http://127.0.0.1:5000/login)",
+      "Bash(tasklist //FI \"IMAGENAME eq python.exe\")",
+      "Bash(powershell -Command \"Get-Process python -ErrorAction SilentlyContinue | Select-Object Id,StartTime\")"
     ]
   }
 }
