@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Пользователи — Data Life{% endblock %}
+{% block content %}
+
+<h1 class="page-title">Пользователи</h1>
+<p class="page-subtitle">Создание аккаунтов преподавателей и учеников</p>
+
+<div class="card">
+  <div class="section-title">Новый пользователь</div>
+  <form method="post" action="{{ url_for('admin.users') }}">
+    <label for="full_name">Полное имя</label>
+    <input type="text" id="full_name" name="full_name" required>
+
+    <label for="username">Логин</label>
+    <input type="text" id="username" name="username" required>
+
+    <label for="password">Пароль</label>
+    <input type="text" id="password" name="password" placeholder="Оставьте пустым — сгенерируется автоматически">
+
+    <label for="role">Роль</label>
+    <select id="role" name="role">
+      <option value="student">Ученик</option>
+      <option value="admin">Преподаватель / администратор</option>
+    </select>
+
+    <button class="btn" type="submit">{{ icon('plus') }}Создать пользователя</button>
+  </form>
+</div>
+
+<div class="card">
+  <div class="section-title">Все пользователи</div>
+  <input class="search-input" type="text" placeholder="Поиск по имени или логину…" data-search-target="#users-table-body" style="margin-bottom:14px;">
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Имя</th>
+        <th>Логин</th>
+        <th>Роль</th>
+        <th>Создан</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="users-table-body">
+      {% for u in users %}
+      <tr data-searchable="{{ u.full_name }} {{ u.username }}">
+        <td>{{ u.full_name }}</td>
+        <td>{{ u.username }}</td>
+        <td>
+          {% if u.role == 'admin' %}
+            <span class="badge badge-admin">Преподаватель</span>
+          {% else %}
+            <span class="badge badge-student">Ученик</span>
+          {% endif %}
+        </td>
+        <td>{{ u.created_at }}</td>
+        <td style="text-align:right; white-space:nowrap;">
+          <form class="inline-form" method="post" action="{{ url_for('admin.reset_password', user_id=u.id) }}" onsubmit="return confirm('Сбросить пароль для {{ u.username }}?');">
+            <button class="btn btn-small btn-secondary" type="submit">{{ icon('refresh', 15) }}Сбросить пароль</button>
+          </form>
+          {% if u.id != g.user.id %}
+          <form class="inline-form" method="post" action="{{ url_for('admin.delete_user', user_id=u.id) }}" onsubmit="return confirm('Удалить пользователя {{ u.username }}?');">
+            <button class="btn btn-small btn-danger" type="submit">{{ icon('trash', 15) }}Удалить</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+
+{% endblock %}

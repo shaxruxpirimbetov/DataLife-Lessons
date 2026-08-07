@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% set hide_shell = true %}
+{% block title %}Вход — Data Life Learning Centre{% endblock %}
+{% block content %}
+<div class="login-wrap">
+  <div class="login-box">
+    <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Data Life">
+    <h1>Data Life Learning Centre</h1>
+    <p class="tag">Вход только для зарегистрированных пользователей</p>
+    <form method="post">
+      <label for="username">Логин</label>
+      <input type="text" id="username" name="username" autocomplete="username" required autofocus>
+
+      <label for="password">Пароль</label>
+      <input type="password" id="password" name="password" autocomplete="current-password" required>
+
+      <button class="btn" type="submit" style="width:100%;">{{ icon('log-in') }}Войти</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

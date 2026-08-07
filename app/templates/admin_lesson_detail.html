@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}{{ lesson.title }} — Data Life{% endblock %}
+{% block content %}
+
+<p style="margin-bottom:6px;"><a href="{{ url_for('admin.dashboard') }}">&larr; Все уроки</a></p>
+<h1 class="page-title">{{ lesson.title }}</h1>
+<p class="page-subtitle">
+  Создан {{ lesson.created_at }}
+  {% if lesson.due_date %} · <span class="due-badge due-{{ lesson.due_date|due_status }}">Срок сдачи: {{ lesson.due_date }}</span>{% endif %}
+</p>
+
+<div class="card">
+  <div class="section-title">Название и описание</div>
+  <form method="post" action="{{ url_for('admin.edit_lesson', lesson_id=lesson.id) }}">
+    <label for="title">Название</label>
+    <input type="text" id="title" name="title" value="{{ lesson.title }}" required>
+
+    <label for="description">Описание</label>
+    <textarea id="description" name="description">{{ lesson.description or '' }}</textarea>
+
+    <label for="due_date">Срок сдачи домашнего задания</label>
+    <input type="date" id="due_date" name="due_date" value="{{ lesson.due_date or '' }}">
+
+    <button class="btn btn-small" type="submit">{{ icon('check', 15) }}Сохранить</button>
+  </form>
+</div>
+
+<div class="card">
+  <div class="section-title">Теория</div>
+  {% if theory_files %}
+  <ul class="file-list">
+    {% for f in theory_files %}
+    <li>
+      <span class="fname"><span class="file-icon">Т</span>{{ f.original_name }}</span>
+      <span>
+        <a class="btn btn-small btn-secondary" href="{{ url_for('admin.download_lesson_file', lesson_id=lesson.id, stored_name=f.stored_name) }}">{{ icon('download', 15) }}Скачать</a>
+        <form class="inline-form" method="post" action="{{ url_for('admin.delete_lesson_file', lesson_id=lesson.id, file_id=f.id) }}" onsubmit="return confirm('Удалить файл?');">
+          <button class="btn btn-small btn-danger" type="submit">{{ icon('trash', 15) }}Удалить</button>
+        </form>
+      </span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="hint" style="margin-top:0;">Файлы теории ещё не добавлены.</p>
+  {% endif %}
+
+  <form method="post" action="{{ url_for('admin.upload_lesson_file', lesson_id=lesson.id) }}" enctype="multipart/form-data" style="margin-top:14px;">
+    <input type="hidden" name="file_type" value="theory">
+    <input type="file" name="file" required>
+    <button class="btn btn-small" type="submit">{{ icon('upload', 15) }}Загрузить файл теории</button>
+  </form>
+</div>
+
+<div class="card">
+  <div class="section-title">Домашнее задание (материал от преподавателя)</div>
+  {% if homework_files %}
+  <ul class="file-list">
+    {% for f in homework_files %}
+    <li>
+      <span class="fname"><span class="file-icon">Д</span>{{ f.original_name }}</span>
+      <span>
+        <a class="btn btn-small btn-secondary" href="{{ url_for('admin.download_lesson_file', lesson_id=lesson.id, stored_name=f.stored_name) }}">{{ icon('download', 15) }}Скачать</a>
+        <form class="inline-form" method="post" action="{{ url_for('admin.delete_lesson_file', lesson_id=lesson.id, file_id=f.id) }}" onsubmit="return confirm('Удалить файл?');">
+          <button class="btn btn-small btn-danger" type="submit">{{ icon('trash', 15) }}Удалить</button>
+        </form>
+      </span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="hint" style="margin-top:0;">Файлы домашнего задания ещё не добавлены.</p>
+  {% endif %}
+
+  <form method="post" action="{{ url_for('admin.upload_lesson_file', lesson_id=lesson.id) }}" enctype="multipart/form-data" style="margin-top:14px;">
+    <input type="hidden" name="file_type" value="homework">
+    <input type="file" name="file" required>
+    <button class="btn btn-small" type="submit">{{ icon('upload', 15) }}Загрузить файл домашки</button>
+  </form>
+</div>
+
+<div class="card">
+  <div class="section-title">Доступ учеников к уроку</div>
+  {% if all_students %}
+  <input class="search-input" type="text" placeholder="Поиск ученика…" data-search-target="#access-list" style="margin-bottom:14px;">
+  <form method="post" action="{{ url_for('admin.update_access', lesson_id=lesson.id) }}">
+    <div class="checkbox-grid" id="access-list">
+      {% for s in all_students %}
+      <label class="checkbox-row" data-searchable="{{ s.full_name }}">
+        <input type="checkbox" name="student_ids" value="{{ s.id }}" {% if s.id in granted_ids %}checked{% endif %}>
+        {{ s.full_name }}
+      </label>
+      {% endfor %}
+    </div>
+    <button class="btn btn-small" type="submit">{{ icon('check', 15) }}Сохранить доступ</button>
+  </form>
+  {% else %}
+  <p class="hint" style="margin-top:0;">Сначала создайте учеников на странице «Пользователи».</p>
+  {% endif %}
+</div>
+
+<div class="card">
+  <div class="section-title">Сданные домашние задания</div>
+  {% if submissions %}
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Ученик</th>
+        <th>Файл</th>
+        <th>Комментарий</th>
+        <th>Отправлено</th>
+        <th>Статус</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in submissions %}
+      <tr>
+        <td>{{ s.full_name }}</td>
+        <td>{{ s.original_name }}</td>
+        <td>{{ s.comment or '—' }}</td>
+        <td>{{ s.submitted_at }}</td>
+        <td>
+          {% if s.status == 'approved' %}
+            <span class="status-badge status-approved">Зачтено</span>
+          {% elif s.status == 'revise' %}
+            <span class="status-badge status-revise">На доработку</span>
+          {% else %}
+            <span class="status-badge status-pending">На проверке</span>
+          {% endif %}
+          {% if s.score is not none %}<span class="score-badge">{{ s.score }}/10</span>{% endif %}
+          {% if s.feedback %}<div class="feedback-box">{{ s.feedback }}</div>{% endif %}
+          <form class="review-form" method="post" action="{{ url_for('admin.review_submission', lesson_id=lesson.id, submission_id=s.id) }}">
+            <select name="status">
+              <option value="pending" {% if s.status == 'pending' %}selected{% endif %}>На проверке</option>
+              <option value="approved" {% if s.status == 'approved' %}selected{% endif %}>Зачтено</option>
+              <option value="revise" {% if s.status == 'revise' %}selected{% endif %}>На доработку</option>
+            </select>
+            <input type="number" name="score" min="0" max="10" placeholder="Балл 0-10" value="{{ s.score if s.score is not none else '' }}">
+            <input type="text" name="feedback" placeholder="Комментарий ученику" value="{{ s.feedback or '' }}">
+            <button class="btn btn-small" type="submit">{{ icon('check', 15) }}Сохранить</button>
+          </form>
+        </td>
+        <td><a class="btn btn-small btn-secondary" href="{{ url_for('admin.download_submission_file', lesson_id=lesson.id, user_id=s.user_id, stored_name=s.stored_name) }}">{{ icon('download', 15) }}Скачать</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <div class="empty-state">Пока никто не сдал домашнее задание.</div>
+  {% endif %}
+</div>
+
+<div class="card">
+  <div class="section-title" style="color:var(--danger);">Опасная зона</div>
+  <form method="post" action="{{ url_for('admin.delete_lesson', lesson_id=lesson.id) }}" onsubmit="return confirm('Удалить урок «{{ lesson.title }}» вместе со всеми файлами и работами? Это необратимо.');">
+    <button class="btn btn-danger" type="submit">{{ icon('trash') }}Удалить урок</button>
+  </form>
+</div>
+
+{% endblock %}

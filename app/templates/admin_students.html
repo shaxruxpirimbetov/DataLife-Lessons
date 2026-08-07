@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Студенты — Data Life{% endblock %}
+{% block content %}
+
+<h1 class="page-title">Студенты</h1>
+<p class="page-subtitle">Успеваемость каждого ученика</p>
+
+<div class="card">
+  {% if students %}
+  <input class="search-input" type="text" placeholder="Поиск по имени или логину…" data-search-target="#students-table-body" style="margin-bottom:14px;">
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Имя</th>
+        <th>Логин</th>
+        <th>Доступно уроков</th>
+        <th>Сдано работ</th>
+        <th>Зачтено</th>
+        <th>На проверке</th>
+        <th>На доработку</th>
+        <th>Средний балл</th>
+      </tr>
+    </thead>
+    <tbody id="students-table-body">
+      {% for s in students %}
+      <tr data-searchable="{{ s.full_name }} {{ s.username }}">
+        <td>{{ s.full_name }}</td>
+        <td>{{ s.username }}</td>
+        <td>{{ s.lessons_count }}</td>
+        <td>{{ s.submissions_count }}</td>
+        <td>{{ s.approved_count or 0 }}</td>
+        <td>{{ s.pending_count or 0 }}</td>
+        <td>{{ s.revise_count or 0 }}</td>
+        <td>{{ '%.1f'|format(s.avg_score) if s.avg_score is not none else '—' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <div class="empty-state">Учеников пока нет.</div>
+  {% endif %}
+</div>
+
+{% endblock %}

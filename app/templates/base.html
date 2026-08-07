@@ -1,0 +1,85 @@
+{% from "_icons.html" import icon %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Data Life Learning Centre{% endblock %}</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/logo.jpg') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</head>
+<body>
+  <div class="aurora" aria-hidden="true">
+    <span class="aurora-blob b1"></span>
+    <span class="aurora-blob b2"></span>
+    <span class="aurora-blob b3"></span>
+  </div>
+
+  <div class="app-shell{{ ' bare' if hide_shell }}">
+    {% if not hide_shell %}
+    <div class="mobile-topbar">
+      <a class="brand" href="{{ url_for('auth.index') }}">
+        <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Data Life">
+        <div class="brand-text">
+          <span class="name">Data Life</span>
+          <span class="sub">Learning Centre</span>
+        </div>
+      </a>
+      <button type="button" class="menu-toggle" id="menuToggle" aria-label="Открыть меню" aria-expanded="false" aria-controls="sidebar">
+        {{ icon('menu', 22) }}
+      </button>
+    </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head">
+        <a class="brand" href="{{ url_for('auth.index') }}">
+          <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Data Life">
+          <div class="brand-text">
+            <span class="name">Data Life</span>
+            <span class="sub">Learning Centre</span>
+          </div>
+        </a>
+        <button type="button" class="sidebar-close" id="sidebarClose" aria-label="Закрыть меню">{{ icon('x', 18) }}</button>
+      </div>
+
+      {% if g.user %}
+      <nav class="sidebar-nav">
+        {% if g.user.role == 'admin' %}
+          <a href="{{ url_for('admin.dashboard') }}" class="{{ 'active' if request.endpoint == 'admin.dashboard' }}">{{ icon('book') }}Уроки</a>
+          <a href="{{ url_for('admin.students') }}" class="{{ 'active' if request.endpoint == 'admin.students' }}">{{ icon('users') }}Студенты</a>
+          <a href="{{ url_for('admin.statistics') }}" class="{{ 'active' if request.endpoint == 'admin.statistics' }}">{{ icon('bar-chart') }}Статистика</a>
+          <a href="{{ url_for('admin.users') }}" class="{{ 'active' if request.endpoint == 'admin.users' }}">{{ icon('user-cog') }}Пользователи</a>
+        {% else %}
+          <a href="{{ url_for('student.dashboard') }}" class="{{ 'active' if request.endpoint == 'student.dashboard' }}">{{ icon('book') }}Мои уроки</a>
+          <a href="{{ url_for('student.statistics') }}" class="{{ 'active' if request.endpoint == 'student.statistics' }}">{{ icon('bar-chart') }}Моя статистика</a>
+        {% endif %}
+      </nav>
+      <div class="sidebar-user">
+        <span class="user-name">{{ g.user.full_name }}</span>
+        <a href="{{ url_for('auth.profile') }}" class="{{ 'active' if request.endpoint == 'auth.profile' }}">{{ icon('user', 15) }}Профиль</a>
+        <a class="logout-link" href="{{ url_for('auth.logout') }}">{{ icon('log-out', 15) }}Выйти</a>
+      </div>
+      {% endif %}
+    </aside>
+    {% endif %}
+
+    <div class="main-area">
+      <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+  </div>
+</body>
+</html>

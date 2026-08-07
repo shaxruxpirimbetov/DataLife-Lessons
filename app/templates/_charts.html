@@ -1,0 +1,33 @@
+{% macro bar_chart(items, max_value=10) %}
+<div class="bar-chart">
+  {% for item in items %}
+  <div class="bar-col">
+    <div class="bar-track">
+      {% if item.value is not none and max_value %}
+      <div class="bar-fill" style="height: {{ (item.value / max_value * 100)|round(1) }}%"></div>
+      {% endif %}
+    </div>
+    <div class="bar-value">{{ item.value if item.value is not none else '—' }}</div>
+    <div class="bar-label" title="{{ item.label }}">{{ item.label }}</div>
+  </div>
+  {% endfor %}
+</div>
+{% endmacro %}
+
+{% macro status_distribution(pending, approved, revise) %}
+{% set total = pending + approved + revise %}
+<div class="status-dist">
+  <div class="status-dist-bar">
+    {% if total %}
+    <span class="seg seg-approved" style="width: {{ (approved / total * 100)|round(1) }}%"></span>
+    <span class="seg seg-pending" style="width: {{ (pending / total * 100)|round(1) }}%"></span>
+    <span class="seg seg-revise" style="width: {{ (revise / total * 100)|round(1) }}%"></span>
+    {% endif %}
+  </div>
+  <div class="status-dist-legend">
+    <span><i class="dot dot-approved"></i>Зачтено: {{ approved }}</span>
+    <span><i class="dot dot-pending"></i>На проверке: {{ pending }}</span>
+    <span><i class="dot dot-revise"></i>На доработку: {{ revise }}</span>
+  </div>
+</div>
+{% endmacro %}

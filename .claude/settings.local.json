@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./.venv/Scripts/python.exe -c ' *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://127.0.0.1:5000/login)",
+      "Bash(curl -s http://127.0.0.1:5000/login)",
+      "Bash(python -c ' *)",
+      "Bash(python run.py)",
+      "Bash(taskkill //F //IM python.exe //T)",
+      "Bash(python \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-user-Desktop-Shax-FLASK-lesson-platform\\\\fc77c0a9-2071-4f12-8d0b-ab7d25326919\\\\scratchpad\\\\seed.py\")",
+      "Bash(python3 *)"
+    ]
+  }
+}

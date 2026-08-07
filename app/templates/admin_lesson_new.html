@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Новый урок — Data Life{% endblock %}
+{% block content %}
+
+<h1 class="page-title">Новый урок</h1>
+<p class="page-subtitle">Файлы и доступ можно будет добавить сразу после создания</p>
+
+<div class="card" style="max-width:560px;">
+  <form method="post">
+    <label for="title">Название урока</label>
+    <input type="text" id="title" name="title" required autofocus>
+
+    <label for="description">Описание</label>
+    <textarea id="description" name="description" placeholder="Кратко о теме урока"></textarea>
+
+    <label for="due_date">Срок сдачи домашнего задания (необязательно)</label>
+    <input type="date" id="due_date" name="due_date">
+
+    <button class="btn" type="submit">{{ icon('plus') }}Создать урок</button>
+    <a class="btn btn-secondary" href="{{ url_for('admin.dashboard') }}">{{ icon('x') }}Отмена</a>
+  </form>
+</div>
+
+{% endblock %}

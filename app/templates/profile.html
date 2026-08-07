@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Профиль — Data Life{% endblock %}
+{% block content %}
+
+<h1 class="page-title">Профиль</h1>
+<p class="page-subtitle">Изменение имени и пароля</p>
+
+<div class="card" style="max-width:480px;">
+  <label>Логин</label>
+  <input type="text" value="{{ g.user.username }}" disabled>
+
+  <form method="post">
+    <label for="full_name">Имя</label>
+    <input type="text" id="full_name" name="full_name" value="{{ g.user.full_name }}" required>
+
+    <label for="current_password">Текущий пароль</label>
+    <input type="password" id="current_password" name="current_password" autocomplete="current-password" required>
+
+    <label for="new_password">Новый пароль</label>
+    <input type="password" id="new_password" name="new_password" autocomplete="new-password" placeholder="Оставьте пустым, чтобы не менять">
+
+    <label for="confirm_password">Повторите новый пароль</label>
+    <input type="password" id="confirm_password" name="confirm_password" autocomplete="new-password">
+
+    <button class="btn" type="submit">{{ icon('check') }}Сохранить</button>
+  </form>
+</div>
+
+{% endblock %}

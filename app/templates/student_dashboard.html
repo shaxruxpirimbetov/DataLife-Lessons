@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Мои уроки — Data Life{% endblock %}
+{% block content %}
+
+<h1 class="page-title">Мои уроки</h1>
+<p class="page-subtitle">Уроки, к которым вам открыт доступ</p>
+
+<div class="card">
+  {% if lessons %}
+  <input class="search-input" type="text" placeholder="Поиск урока…" data-search-target="#lessons-list" style="margin-bottom:14px;">
+  <ul class="lesson-list" id="lessons-list">
+    {% for lesson in lessons %}
+    <li class="lesson-item" data-searchable="{{ lesson.title }}">
+      <div>
+        <div class="title"><a href="{{ url_for('student.lesson_view', lesson_id=lesson.id) }}">{{ lesson.title }}</a></div>
+        <div class="meta">
+          {{ lesson.created_at }}
+          {% if lesson.due_date %} · <span class="due-badge due-{{ lesson.due_date|due_status }}">до {{ lesson.due_date }}</span>{% endif %}
+        </div>
+      </div>
+      <a class="btn btn-small btn-secondary" href="{{ url_for('student.lesson_view', lesson_id=lesson.id) }}">{{ icon('arrow-right', 15) }}Открыть</a>
+    </li>
+    {% endfor %}
+  </ul>
+  <div class="empty-state search-empty-state is-hidden">Ничего не найдено.</div>
+  {% else %}
+  <div class="empty-state">Пока нет доступных уроков. Обратитесь к преподавателю.</div>
+  {% endif %}
+</div>
+
+{% endblock %}

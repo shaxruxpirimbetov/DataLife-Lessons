@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% from "_charts.html" import bar_chart, status_distribution %}
+{% block title %}Статистика — Data Life{% endblock %}
+{% block content %}
+
+<h1 class="page-title">Статистика</h1>
+<p class="page-subtitle">Общая успеваемость по центру</p>
+
+<div class="stats-row">
+  <div class="stat-box">
+    <div class="num">{{ totals.lessons_count }}</div>
+    <div class="label">Уроков</div>
+  </div>
+  <div class="stat-box">
+    <div class="num">{{ totals.students_count }}</div>
+    <div class="label">Учеников</div>
+  </div>
+  <div class="stat-box">
+    <div class="num">{{ totals.submissions_count }}</div>
+    <div class="label">Работ сдано</div>
+  </div>
+  <div class="stat-box">
+    <div class="num">{{ '%.1f'|format(totals.avg_score) if totals.avg_score is not none else '—' }}</div>
+    <div class="label">Средний балл</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-title">Средний балл по урокам</div>
+  {% if lesson_scores %}
+    {{ bar_chart(lesson_scores, max_value=10) }}
+  {% else %}
+  <div class="empty-state">Пока нет оценённых работ.</div>
+  {% endif %}
+</div>
+
+<div class="card">
+  <div class="section-title">Статусы проверки домашних заданий</div>
+  {{ status_distribution(status_counts.pending or 0, status_counts.approved or 0, status_counts.revise or 0) }}
+</div>
+
+{% endblock %}

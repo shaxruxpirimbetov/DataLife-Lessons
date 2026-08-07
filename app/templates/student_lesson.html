@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}{{ lesson.title }} — Data Life{% endblock %}
+{% block content %}
+
+<p style="margin-bottom:6px;"><a href="{{ url_for('student.dashboard') }}">&larr; Мои уроки</a></p>
+<h1 class="page-title">{{ lesson.title }}</h1>
+<p class="page-subtitle">
+  {{ lesson.description or '' }}
+  {% if lesson.due_date %}
+  <span class="due-badge due-{{ lesson.due_date|due_status }}">
+    {% if lesson.due_date|due_status == 'overdue' %}Срок сдачи истёк: {{ lesson.due_date }}
+    {% else %}Срок сдачи: {{ lesson.due_date }}{% endif %}
+  </span>
+  {% endif %}
+</p>
+
+<div class="card">
+  <div class="section-title">Теория</div>
+  {% if theory_files %}
+  <ul class="file-list">
+    {% for f in theory_files %}
+    <li>
+      <span class="fname"><span class="file-icon">Т</span>{{ f.original_name }}</span>
+      <a class="btn btn-small btn-secondary" href="{{ url_for('student.download_file', lesson_id=lesson.id, stored_name=f.stored_name) }}">{{ icon('download', 15) }}Скачать</a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="empty-state">Материалы теории пока не добавлены.</div>
+  {% endif %}
+</div>
+
+<div class="card">
+  <div class="section-title">Домашнее задание</div>
+  {% if homework_files %}
+  <ul class="file-list">
+    {% for f in homework_files %}
+    <li>
+      <span class="fname"><span class="file-icon">Д</span>{{ f.original_name }}</span>
+      <a class="btn btn-small btn-secondary" href="{{ url_for('student.download_file', lesson_id=lesson.id, stored_name=f.stored_name) }}">{{ icon('download', 15) }}Скачать</a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="empty-state">Задание пока не добавлено.</div>
+  {% endif %}
+</div>
+
+<div class="card">
+  <div class="section-title">Отправить выполненную домашнюю работу</div>
+  <form method="post" enctype="multipart/form-data">
+    <label for="file">Файл с решением</label>
+    <input type="file" id="file" name="file" required>
+
+    <label for="comment">Комментарий (необязательно)</label>
+    <textarea id="comment" name="comment" placeholder="Например: вопрос по заданию 3"></textarea>
+
+    <button class="btn" type="submit">{{ icon('send') }}Отправить</button>
+  </form>
+</div>
+
+<div class="card">
+  <div class="section-title">История моих отправок</div>
+  {% if my_submissions %}
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Файл</th>
+        <th>Комментарий</th>
+        <th>Отправлено</th>
+        <th>Проверка</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in my_submissions %}
+      <tr>
+        <td>{{ s.original_name }}</td>
+        <td>{{ s.comment or '—' }}</td>
+        <td>{{ s.submitted_at }}</td>
+        <td>
+          {% if s.status == 'approved' %}
+            <span class="status-badge status-approved">Зачтено</span>
+          {% elif s.status == 'revise' %}
+            <span class="status-badge status-revise">На доработку</span>
+          {% else %}
+            <span class="status-badge status-pending">На проверке</span>
+          {% endif %}
+          {% if s.score is not none %}<span class="score-badge">{{ s.score }}/10</span>{% endif %}
+          {% if s.feedback %}<div class="feedback-box">{{ s.feedback }}</div>{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <p class="hint" style="margin-top:0;">Вы ещё не отправляли домашнее задание по этому уроку.</p>
+  {% endif %}
+</div>
+
+{% endblock %}
