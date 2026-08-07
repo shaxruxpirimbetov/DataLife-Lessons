@@ -974,23 +974,6 @@ th {
   color: var(--ink);
 }
 
-.review-form {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin-top: 6px;
-}
-.review-form select,
-.review-form input {
-  width: auto;
-  margin-bottom: 0;
-  padding: 6px 10px;
-  font-size: 12.5px;
-}
-.review-form input[type="text"] { min-width: 160px; flex: 1; }
-.review-form input[type="number"] { width: 80px; }
-
 /* ---------- Charts ---------- */
 
 .line-chart-scroll {

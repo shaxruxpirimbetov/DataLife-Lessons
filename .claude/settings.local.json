@@ -52,7 +52,12 @@
       "Bash(tasklist //FI \"IMAGENAME eq python.exe\")",
       "Bash(powershell -Command \"Get-Process python -ErrorAction SilentlyContinue | Select-Object Id,StartTime\")",
       "Bash(.venv/Scripts/python.exe \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-user-Desktop-Shax-FLASK-lesson-platform\\\\c0035eda-721e-45cd-a238-c1cc3de81f8f\\\\scratchpad\\\\check_theme.py\")",
-      "Bash(.venv/Scripts/pip.exe uninstall *)"
+      "Bash(.venv/Scripts/pip.exe uninstall *)",
+      "Bash(rm -f /tmp/cj6.txt)",
+      "Bash(curl -s -c /tmp/cj6.txt -b /tmp/cj6.txt -X POST http://127.0.0.1:5000/login -d \"username=admin&password=shaxcoder12\" -o /dev/null -w \"login: %{http_code}\\\\n\")",
+      "Bash(curl -s -c /tmp/cj6.txt -b /tmp/cj6.txt http://127.0.0.1:5000/admin/dashboard -o /tmp/dash.html)",
+      "Bash(curl -s -i -c /tmp/cj6.txt -b /tmp/cj6.txt -X POST http://127.0.0.1:5000/admin/lessons/1/submissions/7/review -d \"status=approved&score=9&feedback=Тестовая проверка\")",
+      "Bash(curl -s -c /tmp/cj6.txt -b /tmp/cj6.txt http://127.0.0.1:5000/admin/lessons/1 -o /tmp/lesson1_after.html)"
     ]
   }
 }

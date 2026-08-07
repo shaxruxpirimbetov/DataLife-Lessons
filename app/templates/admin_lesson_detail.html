@@ -132,23 +132,45 @@
           {% endif %}
           {% if s.score is not none %}<span class="score-badge">{{ s.score }}/10</span>{% endif %}
           {% if s.feedback %}<div class="feedback-box">{{ s.feedback }}</div>{% endif %}
-          <form class="review-form" method="post" action="{{ url_for('admin.review_submission', lesson_id=lesson.id, submission_id=s.id) }}">
-            <select name="status">
-              <option value="pending" {% if s.status == 'pending' %}selected{% endif %}>На проверке</option>
-              <option value="approved" {% if s.status == 'approved' %}selected{% endif %}>Зачтено</option>
-              <option value="revise" {% if s.status == 'revise' %}selected{% endif %}>На доработку</option>
-            </select>
-            <input type="number" name="score" min="0" max="10" placeholder="Балл 0-10" value="{{ s.score if s.score is not none else '' }}">
-            <input type="text" name="feedback" placeholder="Комментарий ученику" value="{{ s.feedback or '' }}">
-            <button class="btn btn-small" type="submit">{{ icon('check', 15) }}Сохранить</button>
-          </form>
         </td>
-        <td><a class="btn btn-small btn-secondary" href="{{ url_for('admin.download_submission_file', lesson_id=lesson.id, user_id=s.user_id, stored_name=s.stored_name) }}">{{ icon('download', 15) }}Скачать</a></td>
+        <td style="white-space:nowrap;">
+          <button type="button" class="btn btn-small" data-modal-open="reviewModal{{ s.id }}">{{ icon('check', 15) }}Оценить</button>
+          <a class="btn btn-small btn-secondary" href="{{ url_for('admin.download_submission_file', lesson_id=lesson.id, user_id=s.user_id, stored_name=s.stored_name) }}">{{ icon('download', 15) }}Скачать</a>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
   </div>
+
+  {% for s in submissions %}
+  <div class="modal-overlay" id="reviewModal{{ s.id }}-overlay" data-modal-overlay="reviewModal{{ s.id }}"></div>
+  <div class="modal" id="reviewModal{{ s.id }}" role="dialog" aria-modal="true" aria-labelledby="reviewModal{{ s.id }}Title">
+    <div class="modal-head">
+      <h2 id="reviewModal{{ s.id }}Title">Оценить — {{ s.full_name }}</h2>
+      <button type="button" class="modal-close" data-modal-close aria-label="Закрыть">{{ icon('x', 18) }}</button>
+    </div>
+    <form method="post" action="{{ url_for('admin.review_submission', lesson_id=lesson.id, submission_id=s.id) }}">
+      <label for="status{{ s.id }}">Статус</label>
+      <select id="status{{ s.id }}" name="status">
+        <option value="pending" {% if s.status == 'pending' %}selected{% endif %}>На проверке</option>
+        <option value="approved" {% if s.status == 'approved' %}selected{% endif %}>Зачтено</option>
+        <option value="revise" {% if s.status == 'revise' %}selected{% endif %}>На доработку</option>
+      </select>
+
+      <label for="score{{ s.id }}">Балл (0–10)</label>
+      <input type="number" id="score{{ s.id }}" name="score" min="0" max="10" placeholder="Балл 0-10" value="{{ s.score if s.score is not none else '' }}">
+
+      <label for="feedback{{ s.id }}">Комментарий ученику</label>
+      <input type="text" id="feedback{{ s.id }}" name="feedback" placeholder="Комментарий ученику" value="{{ s.feedback or '' }}">
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" data-modal-close>Отмена</button>
+        <button type="submit" class="btn">{{ icon('check', 15) }}Сохранить</button>
+      </div>
+    </form>
+  </div>
+  {% endfor %}
   {% else %}
   <div class="empty-state">Пока никто не сдал домашнее задание.</div>
   {% endif %}
