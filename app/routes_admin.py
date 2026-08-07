@@ -48,6 +48,30 @@ def students():
     return render_template("admin_students.html", students=rows)
 
 
+@admin_bp.route("/students/new", methods=["POST"])
+@admin_required
+def add_student():
+    db = get_db()
+    full_name = request.form.get("full_name", "").strip()
+    username = request.form.get("username", "").strip()
+    password = request.form.get("password", "").strip() or secrets.token_urlsafe(6)
+
+    if not full_name or not username:
+        flash("Заполните имя и логин.", "error")
+    else:
+        existing = db.execute("SELECT id FROM users WHERE username = ?", (username,)).fetchone()
+        if existing:
+            flash("Такой логин уже занят.", "error")
+        else:
+            db.execute(
+                "INSERT INTO users (username, password_hash, full_name, role) VALUES (?, ?, ?, 'student')",
+                (username, generate_password_hash(password), full_name),
+            )
+            db.commit()
+            flash(f"Ученик добавлен. Логин: {username} · Пароль: {password}", "success")
+    return redirect(url_for("admin.students"))
+
+
 @admin_bp.route("/statistics")
 @admin_required
 def statistics():

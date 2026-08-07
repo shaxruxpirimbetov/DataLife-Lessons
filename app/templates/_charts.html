@@ -1,16 +1,29 @@
-{% macro bar_chart(items, max_value=10) %}
-<div class="bar-chart">
-  {% for item in items %}
-  <div class="bar-col">
-    <div class="bar-track">
-      {% if item.value is not none and max_value %}
-      <div class="bar-fill" style="height: {{ (item.value / max_value * 100)|round(1) }}%"></div>
-      {% endif %}
+{% macro line_chart(items, max_value=10) %}
+{% set n = items|length %}
+<div class="line-chart-scroll">
+  <div class="line-chart" style="min-width: {{ [n * 76, 260]|max }}px;">
+    <div class="line-chart-plot">
+      <svg class="line-chart-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <line class="lc-grid" x1="0" y1="99" x2="100" y2="99"></line>
+        <line class="lc-grid" x1="0" y1="50" x2="100" y2="50"></line>
+        <line class="lc-grid" x1="0" y1="1" x2="100" y2="1"></line>
+        {% if n > 1 %}
+        <polyline class="lc-line" points="{% for item in items %}{{ ((loop.index0 + 0.5) / n * 100)|round(2) }},{{ (100 - ((item.value or 0) / max_value * 100))|round(2) if max_value else 100 }}{{ ' ' if not loop.last }}{% endfor %}"></polyline>
+        {% endif %}
+      </svg>
+      {% for item in items %}
+      {% set x = ((loop.index0 + 0.5) / n * 100)|round(2) %}
+      {% set y = ((100 - ((item.value or 0) / max_value * 100)) if max_value else 100)|round(2) %}
+      <div class="lc-dot" style="left: {{ x }}%; top: {{ y }}%;"></div>
+      <div class="lc-value" style="left: {{ x }}%; top: {{ y }}%;">{{ item.value if item.value is not none else '—' }}</div>
+      {% endfor %}
     </div>
-    <div class="bar-value">{{ item.value if item.value is not none else '—' }}</div>
-    <div class="bar-label" title="{{ item.label }}">{{ item.label }}</div>
+    <div class="line-chart-labels">
+      {% for item in items %}
+      <div class="lc-label" title="{{ item.label }}">{{ item.label }}</div>
+      {% endfor %}
+    </div>
   </div>
-  {% endfor %}
 </div>
 {% endmacro %}
 

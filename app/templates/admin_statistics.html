@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_charts.html" import bar_chart, status_distribution %}
+{% from "_charts.html" import line_chart, status_distribution %}
 {% block title %}Статистика — Data Life{% endblock %}
 {% block content %}
 
@@ -28,7 +28,7 @@
 <div class="card">
   <div class="section-title">Средний балл по урокам</div>
   {% if lesson_scores %}
-    {{ bar_chart(lesson_scores, max_value=10) }}
+    {{ line_chart(lesson_scores, max_value=10) }}
   {% else %}
   <div class="empty-state">Пока нет оценённых работ.</div>
   {% endif %}

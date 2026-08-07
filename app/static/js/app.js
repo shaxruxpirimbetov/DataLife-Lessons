@@ -96,10 +96,52 @@
     });
   }
 
+  // Simple modal dialogs: [data-modal-open="id"] opens #id (+ its overlay),
+  // [data-modal-close] / overlay click / Escape closes whatever is open.
+  function initModals() {
+    var triggers = document.querySelectorAll("[data-modal-open]");
+    if (!triggers.length) return;
+
+    function closeAll() {
+      document.querySelectorAll(".modal.is-open").forEach(function (m) {
+        m.classList.remove("is-open");
+      });
+      document.querySelectorAll(".modal-overlay.is-open").forEach(function (o) {
+        o.classList.remove("is-open");
+      });
+      document.body.classList.remove("modal-open");
+    }
+
+    triggers.forEach(function (trigger) {
+      trigger.addEventListener("click", function () {
+        var id = trigger.getAttribute("data-modal-open");
+        var modal = document.getElementById(id);
+        if (!modal) return;
+        var overlay = document.querySelector('[data-modal-overlay="' + id + '"]');
+        modal.classList.add("is-open");
+        if (overlay) overlay.classList.add("is-open");
+        document.body.classList.add("modal-open");
+        var firstField = modal.querySelector("input, textarea, select");
+        if (firstField) firstField.focus();
+      });
+    });
+
+    document.querySelectorAll("[data-modal-close]").forEach(function (btn) {
+      btn.addEventListener("click", closeAll);
+    });
+    document.querySelectorAll("[data-modal-overlay]").forEach(function (overlay) {
+      overlay.addEventListener("click", closeAll);
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeAll();
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     initAurora();
     initFlashes();
     initSearch();
     initMobileNav();
+    initModals();
   });
 })();

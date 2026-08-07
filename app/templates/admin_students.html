@@ -1,9 +1,15 @@
 {% extends "base.html" %}
+{% from "_icons.html" import icon %}
 {% block title %}Студенты — Data Life{% endblock %}
 {% block content %}
 
-<h1 class="page-title">Студенты</h1>
-<p class="page-subtitle">Успеваемость каждого ученика</p>
+<div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+  <div>
+    <h1 class="page-title" style="margin-bottom:4px;">Студенты</h1>
+    <p class="page-subtitle" style="margin:0;">Успеваемость каждого ученика</p>
+  </div>
+  <button type="button" class="btn btn-small" data-modal-open="addStudentModal">{{ icon('plus', 15) }}Добавить ученика</button>
+</div>
 
 <div class="card">
   {% if students %}
@@ -41,6 +47,29 @@
   {% else %}
   <div class="empty-state">Учеников пока нет.</div>
   {% endif %}
+</div>
+
+<div class="modal-overlay" id="addStudentModal-overlay" data-modal-overlay="addStudentModal"></div>
+<div class="modal" id="addStudentModal" role="dialog" aria-modal="true" aria-labelledby="addStudentModalTitle">
+  <div class="modal-head">
+    <h2 id="addStudentModalTitle">Новый ученик</h2>
+    <button type="button" class="modal-close" data-modal-close aria-label="Закрыть">{{ icon('x', 18) }}</button>
+  </div>
+  <form method="post" action="{{ url_for('admin.add_student') }}">
+    <label for="new_student_full_name">Полное имя</label>
+    <input type="text" id="new_student_full_name" name="full_name" required>
+
+    <label for="new_student_username">Логин</label>
+    <input type="text" id="new_student_username" name="username" required>
+
+    <label for="new_student_password">Пароль</label>
+    <input type="text" id="new_student_password" name="password" placeholder="Оставьте пустым — сгенерируется автоматически">
+
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" data-modal-close>Отмена</button>
+      <button type="submit" class="btn">{{ icon('plus', 15) }}Добавить</button>
+    </div>
+  </form>
 </div>
 
 {% endblock %}

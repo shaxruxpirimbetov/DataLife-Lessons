@@ -10,7 +10,23 @@
       "Bash(python \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-user-Desktop-Shax-FLASK-lesson-platform\\\\fc77c0a9-2071-4f12-8d0b-ab7d25326919\\\\scratchpad\\\\seed.py\")",
       "Bash(python3 *)",
       "Bash(.venv/Scripts/python.exe seed.py)",
-      "Bash(.venv/Scripts/python.exe -c ' *)"
+      "Bash(.venv/Scripts/python.exe -c ' *)",
+      "Bash(.venv/Scripts/python.exe run.py)",
+      "Bash(curl -s -c /tmp/cookies.txt -b /tmp/cookies.txt http://127.0.0.1:5000/login -o /tmp/login_page.html -w \"login page status: %{http_code}\\\\n\")",
+      "Bash(curl -s -c /tmp/cookies.txt -b /tmp/cookies.txt -X POST http://127.0.0.1:5000/login -d \"username=admin&password=shaxcoder12\" -o /tmp/login_result.html -w \"login post status: %{http_code}\\\\n\" -L)",
+      "Bash(curl -s -c /tmp/cookies.txt -b /tmp/cookies.txt http://127.0.0.1:5000/admin/statistics -o /tmp/stats.html -w \"stats status: %{http_code}\\\\n\")",
+      "Bash(curl -s -c /tmp/cookies.txt -b /tmp/cookies.txt http://127.0.0.1:5000/admin/students -o /tmp/students.html -w \"students status: %{http_code}\\\\n\")",
+      "Bash(curl -s -i -X POST http://127.0.0.1:5000/login -d \"username=admin&password=shaxcoder12\")",
+      "Bash(rm -f /tmp/cj.txt)",
+      "Bash(curl -s -c /tmp/cj.txt -b /tmp/cj.txt -X POST http://127.0.0.1:5000/login -d \"username=admin&password=shaxcoder12\" -o /dev/null -w \"login: %{http_code}\\\\n\")",
+      "Bash(curl -s -c /tmp/cj.txt -b /tmp/cj.txt http://127.0.0.1:5000/admin/statistics -o /tmp/stats.html -w \"stats: %{http_code}\\\\n\")",
+      "Bash(curl -s -c /tmp/cj.txt -b /tmp/cj.txt http://127.0.0.1:5000/admin/students -o /tmp/students.html -w \"students: %{http_code}\\\\n\")",
+      "Bash(curl -s -c /tmp/cj.txt -b /tmp/cj.txt -X POST http://127.0.0.1:5000/admin/students/new -d \"full_name=Тест+Тестов&username=testuser1&password=\" -o /dev/null -w \"add_student: %{http_code}\\\\n\")",
+      "Read(//tmp/**)",
+      "Bash(curl -s -c /tmp/cj.txt -b /tmp/cj.txt http://127.0.0.1:5000/admin/students -o /tmp/students2.html -w \"students: %{http_code}\\\\n\")",
+      "Bash(curl -s -i -c /tmp/cj.txt -b /tmp/cj.txt -X POST http://127.0.0.1:5000/admin/students/new -d \"full_name=TestFullName&username=testuser2&password=abc123\")",
+      "Bash(curl -s -c /tmp/cj.txt -b /tmp/cj.txt http://127.0.0.1:5000/admin/students -o /tmp/students3.html)",
+      "Bash(powershell -Command 'Get-Process python -ErrorAction SilentlyContinue | Where-Object {$_.MainWindowTitle -eq '\\\\'''\\\\''} | Stop-Process -Force')"
     ]
   }
 }
