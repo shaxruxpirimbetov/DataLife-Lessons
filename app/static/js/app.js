@@ -102,12 +102,14 @@
     var triggers = document.querySelectorAll("[data-modal-open]");
     if (!triggers.length) return;
 
+    // Elements stay display:none while closed (see style.css comment above
+    // .modal-overlay) so their fixed/centered box can't add to the page's
+    // scrollable area. JS flips display around the opacity/transform
+    // transition so the fade still animates.
     function closeAll() {
-      document.querySelectorAll(".modal.is-open").forEach(function (m) {
-        m.classList.remove("is-open");
-      });
-      document.querySelectorAll(".modal-overlay.is-open").forEach(function (o) {
-        o.classList.remove("is-open");
+      document.querySelectorAll(".modal.is-open, .modal-overlay.is-open").forEach(function (el) {
+        el.classList.remove("is-open");
+        setTimeout(function () { el.style.display = "none"; }, 200);
       });
       document.body.classList.remove("modal-open");
     }
@@ -118,6 +120,9 @@
         var modal = document.getElementById(id);
         if (!modal) return;
         var overlay = document.querySelector('[data-modal-overlay="' + id + '"]');
+        modal.style.display = "block";
+        if (overlay) overlay.style.display = "block";
+        void modal.offsetHeight; // force layout so the transition plays
         modal.classList.add("is-open");
         if (overlay) overlay.classList.add("is-open");
         document.body.classList.add("modal-open");

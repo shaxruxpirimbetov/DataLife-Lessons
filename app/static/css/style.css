@@ -977,7 +977,14 @@ th {
 
 /* ---------- Modal ---------- */
 
+/* display:none while closed keeps these position:fixed elements fully out of
+   layout — otherwise their pre-transform box (top/left 50%) still counts
+   toward the document's scrollable area and stretches the whole page
+   horizontally, even at opacity:0. JS toggles display before/after the
+   opacity/transform transition (see initModals in app.js). */
+
 .modal-overlay {
+  display: none;
   position: fixed;
   inset: 0;
   background: rgba(13, 19, 48, 0.45);
@@ -993,6 +1000,7 @@ th {
 }
 
 .modal {
+  display: none;
   position: fixed;
   top: 50%;
   left: 50%;
