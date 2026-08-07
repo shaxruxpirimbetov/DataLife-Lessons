@@ -142,11 +142,30 @@
     });
   }
 
+  // Dark/light toggle. The <head> inline script already set data-theme
+  // before paint (from localStorage or prefers-color-scheme); this just
+  // wires up every .theme-toggle button (sidebar + mobile topbar) to flip
+  // and persist it.
+  function initThemeToggle() {
+    var toggles = document.querySelectorAll(".theme-toggle");
+    if (!toggles.length) return;
+
+    toggles.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var isDark = document.documentElement.getAttribute("data-theme") === "dark";
+        var next = isDark ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", next);
+        try { localStorage.setItem("theme", next); } catch (e) {}
+      });
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     initAurora();
     initFlashes();
     initSearch();
     initMobileNav();
+    initThemeToggle();
     initModals();
   });
 })();

@@ -10,6 +10,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script>
+    // Runs synchronously before CSS paints, so the page never flashes the
+    // wrong theme. app.js (deferred) wires up the toggle buttons later.
+    (function () {
+      try {
+        var stored = localStorage.getItem('theme');
+        var theme = stored || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
   <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
 </head>
 <body>
@@ -29,9 +40,15 @@
           <span class="sub">Learning Centre</span>
         </div>
       </a>
-      <button type="button" class="menu-toggle" id="menuToggle" aria-label="Открыть меню" aria-expanded="false" aria-controls="sidebar">
-        {{ icon('menu', 22) }}
-      </button>
+      <div class="topbar-actions">
+        <button type="button" class="theme-toggle" aria-label="Переключить тему">
+          <span class="icon-sun">{{ icon('sun', 18) }}</span>
+          <span class="icon-moon">{{ icon('moon', 18) }}</span>
+        </button>
+        <button type="button" class="menu-toggle" id="menuToggle" aria-label="Открыть меню" aria-expanded="false" aria-controls="sidebar">
+          {{ icon('menu', 22) }}
+        </button>
+      </div>
     </div>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <aside class="sidebar" id="sidebar">
@@ -62,6 +79,11 @@
       <div class="sidebar-user">
         <span class="user-name">{{ g.user.full_name }}</span>
         <a href="{{ url_for('auth.profile') }}" class="{{ 'active' if request.endpoint == 'auth.profile' }}">{{ icon('user', 15) }}Профиль</a>
+        <button type="button" class="theme-toggle">
+          <span class="icon-sun">{{ icon('sun', 15) }}</span>
+          <span class="icon-moon">{{ icon('moon', 15) }}</span>
+          <span class="theme-toggle-label">Тема</span>
+        </button>
         <a class="logout-link" href="{{ url_for('auth.logout') }}">{{ icon('log-out', 15) }}Выйти</a>
       </div>
       {% endif %}
