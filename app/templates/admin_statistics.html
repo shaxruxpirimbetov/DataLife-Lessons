@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "_charts.html" import line_chart, status_distribution %}
+{% from "_icons.html" import icon %}
 {% block title %}Статистика — Data Life{% endblock %}
 {% block content %}
 
@@ -8,35 +9,101 @@
 
 <div class="stats-row">
   <div class="stat-box">
+    <div class="stat-icon">{{ icon('book', 17) }}</div>
     <div class="num">{{ totals.lessons_count }}</div>
     <div class="label">Уроков</div>
   </div>
   <div class="stat-box">
+    <div class="stat-icon c-green">{{ icon('users', 17) }}</div>
     <div class="num">{{ totals.students_count }}</div>
     <div class="label">Учеников</div>
   </div>
   <div class="stat-box">
+    <div class="stat-icon c-purple">{{ icon('file-text', 17) }}</div>
     <div class="num">{{ totals.submissions_count }}</div>
     <div class="label">Работ сдано</div>
   </div>
   <div class="stat-box">
+    <div class="stat-icon c-orange">{{ icon('target', 17) }}</div>
     <div class="num">{{ '%.1f'|format(totals.avg_score) if totals.avg_score is not none else '—' }}</div>
     <div class="label">Средний балл</div>
   </div>
 </div>
 
-<div class="card">
-  <div class="section-title">Средний балл по урокам</div>
-  {% if lesson_scores %}
-    {{ line_chart(lesson_scores, max_value=10) }}
-  {% else %}
-  <div class="empty-state">Пока нет оценённых работ.</div>
-  {% endif %}
+<div class="stats-grid">
+  <div class="card">
+    <div class="card-head">
+      <div class="stat-icon">{{ icon('bar-chart', 15) }}</div>
+      <div class="section-title">Средний балл по урокам</div>
+    </div>
+    {% if lesson_scores %}
+      {{ line_chart(lesson_scores, max_value=10) }}
+    {% else %}
+    <div class="empty-state">Пока нет оценённых работ.</div>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="stat-icon c-green">{{ icon('check', 15) }}</div>
+      <div class="section-title">Статусы проверки</div>
+    </div>
+    {{ status_distribution(status_counts.pending or 0, status_counts.approved or 0, status_counts.revise or 0) }}
+  </div>
 </div>
 
-<div class="card">
-  <div class="section-title">Статусы проверки домашних заданий</div>
-  {{ status_distribution(status_counts.pending or 0, status_counts.approved or 0, status_counts.revise or 0) }}
+<div class="stats-grid" style="margin-top:20px; grid-template-columns: 1fr 1.6fr;">
+  <div class="card">
+    <div class="card-head">
+      <div class="stat-icon c-orange">{{ icon('award', 15) }}</div>
+      <div class="section-title">Топ учеников</div>
+    </div>
+    {% if top_students %}
+    <ul class="leaderboard">
+      {% for s in top_students %}
+      <li>
+        <span class="rank">{{ loop.index }}</span>
+        <span class="name">{{ s.full_name }}</span>
+        <span class="sub">{{ s.avg_score }}/10 · {{ s.graded_count }} раб.</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="empty-state">Пока нет оценённых работ.</div>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="stat-icon c-purple">{{ icon('clock', 15) }}</div>
+      <div class="section-title">Последние сдачи</div>
+    </div>
+    {% if recent_submissions %}
+    <ul class="activity-list">
+      {% for s in recent_submissions %}
+      <li>
+        <span class="a-icon">{{ icon('file-text', 15) }}</span>
+        <span class="a-body">
+          <span class="a-title"><b>{{ s.full_name }}</b> сдал(а) «{{ s.lesson_title }}»</span>
+          <span class="a-meta">
+            <span>{{ s.submitted_at }}</span>
+            {% if s.status == 'approved' %}
+              <span class="status-badge status-approved">Зачтено</span>
+            {% elif s.status == 'revise' %}
+              <span class="status-badge status-revise">На доработку</span>
+            {% else %}
+              <span class="status-badge status-pending">На проверке</span>
+            {% endif %}
+            {% if s.score is not none %}<span class="score-badge">{{ s.score }}/10</span>{% endif %}
+          </span>
+        </span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="empty-state">Пока нет сданных работ.</div>
+    {% endif %}
+  </div>
 </div>
 
 {% endblock %}

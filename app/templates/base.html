@@ -55,6 +55,7 @@
           <a href="{{ url_for('admin.users') }}" class="{{ 'active' if request.endpoint == 'admin.users' }}">{{ icon('user-cog') }}Пользователи</a>
         {% else %}
           <a href="{{ url_for('student.dashboard') }}" class="{{ 'active' if request.endpoint == 'student.dashboard' }}">{{ icon('book') }}Мои уроки</a>
+          <a href="{{ url_for('student.history') }}" class="{{ 'active' if request.endpoint == 'student.history' }}">{{ icon('clock') }}История сдач</a>
           <a href="{{ url_for('student.statistics') }}" class="{{ 'active' if request.endpoint == 'student.statistics' }}">{{ icon('bar-chart') }}Моя статистика</a>
         {% endif %}
       </nav>

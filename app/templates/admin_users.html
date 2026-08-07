@@ -3,11 +3,20 @@
 {% block title %}Пользователи — Data Life{% endblock %}
 {% block content %}
 
-<h1 class="page-title">Пользователи</h1>
-<p class="page-subtitle">Создание аккаунтов преподавателей и учеников</p>
+<div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+  <div>
+    <h1 class="page-title" style="margin-bottom:4px;">Пользователи</h1>
+    <p class="page-subtitle" style="margin:0;">Создание аккаунтов преподавателей и учеников</p>
+  </div>
+  <button type="button" class="btn btn-small" data-modal-open="addUserModal">{{ icon('plus', 15) }}Новый пользователь</button>
+</div>
 
-<div class="card">
-  <div class="section-title">Новый пользователь</div>
+<div class="modal-overlay" id="addUserModal-overlay" data-modal-overlay="addUserModal"></div>
+<div class="modal" id="addUserModal" role="dialog" aria-modal="true" aria-labelledby="addUserModalTitle">
+  <div class="modal-head">
+    <h2 id="addUserModalTitle">Новый пользователь</h2>
+    <button type="button" class="modal-close" data-modal-close aria-label="Закрыть">{{ icon('x', 18) }}</button>
+  </div>
   <form method="post" action="{{ url_for('admin.users') }}">
     <label for="full_name">Полное имя</label>
     <input type="text" id="full_name" name="full_name" required>
@@ -24,7 +33,10 @@
       <option value="admin">Преподаватель / администратор</option>
     </select>
 
-    <button class="btn" type="submit">{{ icon('plus') }}Создать пользователя</button>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" data-modal-close>Отмена</button>
+      <button class="btn" type="submit">{{ icon('plus', 15) }}Создать</button>
+    </div>
   </form>
 </div>
 

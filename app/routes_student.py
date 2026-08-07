@@ -122,6 +122,24 @@ def statistics():
     )
 
 
+@student_bp.route("/dashboard/history")
+@login_required
+def history():
+    db = get_db()
+    if g.user["role"] == "admin":
+        return redirect(url_for("admin.dashboard"))
+
+    submissions = db.execute(
+        "SELECT s.*, l.title AS lesson_title "
+        "FROM submissions s "
+        "JOIN lessons l ON l.id = s.lesson_id "
+        "WHERE s.user_id = ? "
+        "ORDER BY s.submitted_at DESC",
+        (g.user["id"],),
+    ).fetchall()
+    return render_template("student_history.html", submissions=submissions)
+
+
 @student_bp.route("/lessons/<int:lesson_id>/download/<path:stored_name>")
 @login_required
 def download_file(lesson_id, stored_name):

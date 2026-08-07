@@ -26,7 +26,18 @@
       "Bash(curl -s -c /tmp/cj.txt -b /tmp/cj.txt http://127.0.0.1:5000/admin/students -o /tmp/students2.html -w \"students: %{http_code}\\\\n\")",
       "Bash(curl -s -i -c /tmp/cj.txt -b /tmp/cj.txt -X POST http://127.0.0.1:5000/admin/students/new -d \"full_name=TestFullName&username=testuser2&password=abc123\")",
       "Bash(curl -s -c /tmp/cj.txt -b /tmp/cj.txt http://127.0.0.1:5000/admin/students -o /tmp/students3.html)",
-      "Bash(powershell -Command 'Get-Process python -ErrorAction SilentlyContinue | Where-Object {$_.MainWindowTitle -eq '\\\\'''\\\\''} | Stop-Process -Force')"
+      "Bash(powershell -Command 'Get-Process python -ErrorAction SilentlyContinue | Where-Object {$_.MainWindowTitle -eq '\\\\'''\\\\''} | Stop-Process -Force')",
+      "Bash(rm -f /tmp/cj2.txt)",
+      "Bash(curl -s -c /tmp/cj2.txt -b /tmp/cj2.txt -X POST http://127.0.0.1:5000/login -d \"username=admin&password=shaxcoder12\" -o /dev/null -w \"admin login: %{http_code}\\\\n\")",
+      "Bash(curl -s -c /tmp/cj2.txt -b /tmp/cj2.txt http://127.0.0.1:5000/admin/statistics -o /tmp/stats_new.html -w \"stats: %{http_code}\\\\n\")",
+      "Bash(curl -s -c /tmp/cj2.txt -b /tmp/cj2.txt http://127.0.0.1:5000/admin/users -o /tmp/users_new.html -w \"users: %{http_code}\\\\n\")",
+      "Bash(rm -f /tmp/cj3.txt)",
+      "Bash(curl -s -c /tmp/cj3.txt -b /tmp/cj3.txt -X POST http://127.0.0.1:5000/login -d \"username=ivanov&password=student123\" -o /dev/null -w \"student login: %{http_code}\\\\n\")",
+      "Bash(curl -s -c /tmp/cj3.txt -b /tmp/cj3.txt http://127.0.0.1:5000/dashboard/history -o /tmp/history.html -w \"history: %{http_code}\\\\n\")",
+      "Bash(curl -s -c /tmp/cj3.txt -b /tmp/cj3.txt http://127.0.0.1:5000/dashboard -o /tmp/sdash.html -w \"sdash: %{http_code}\\\\n\")",
+      "Bash(curl -s -i -c /tmp/cj2.txt -b /tmp/cj2.txt -X POST http://127.0.0.1:5000/admin/users -d \"full_name=ModalTest&username=modaltestuser&password=abc123&role=student\")",
+      "Bash(curl -s -c /tmp/cj2.txt -b /tmp/cj2.txt http://127.0.0.1:5000/admin/users -o /tmp/users_after.html)",
+      "Bash(powershell -Command \"Get-Process python -ErrorAction SilentlyContinue | Stop-Process -Force\")"
     ]
   }
 }

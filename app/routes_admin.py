@@ -102,11 +102,31 @@ def statistics():
         "ORDER BY l.created_at"
     ).fetchall()
 
+    top_students = db.execute(
+        "SELECT u.full_name, ROUND(AVG(s.score), 1) AS avg_score, COUNT(s.id) AS graded_count "
+        "FROM users u "
+        "JOIN submissions s ON s.user_id = u.id AND s.score IS NOT NULL "
+        "WHERE u.role = 'student' "
+        "GROUP BY u.id "
+        "ORDER BY avg_score DESC, graded_count DESC "
+        "LIMIT 5"
+    ).fetchall()
+
+    recent_submissions = db.execute(
+        "SELECT s.*, u.full_name, l.title AS lesson_title "
+        "FROM submissions s "
+        "JOIN users u ON u.id = s.user_id "
+        "JOIN lessons l ON l.id = s.lesson_id "
+        "ORDER BY s.submitted_at DESC LIMIT 6"
+    ).fetchall()
+
     return render_template(
         "admin_statistics.html",
         totals=totals,
         status_counts=status_counts,
         lesson_scores=lesson_scores,
+        top_students=top_students,
+        recent_submissions=recent_submissions,
     )
 
 

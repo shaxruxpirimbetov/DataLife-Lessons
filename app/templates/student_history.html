@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}История сдач — Data Life{% endblock %}
+{% block content %}
+
+<h1 class="page-title">История сдач</h1>
+<p class="page-subtitle">Все домашние задания, которые вы когда-либо отправляли</p>
+
+<div class="card">
+  {% if submissions %}
+  <input class="search-input" type="text" placeholder="Поиск по уроку или файлу…" data-search-target="#history-list" style="margin-bottom:14px;">
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Урок</th>
+        <th>Файл</th>
+        <th>Комментарий</th>
+        <th>Отправлено</th>
+        <th>Проверка</th>
+      </tr>
+    </thead>
+    <tbody id="history-list">
+      {% for s in submissions %}
+      <tr data-searchable="{{ s.lesson_title }} {{ s.original_name }}">
+        <td>{{ s.lesson_title }}</td>
+        <td>{{ s.original_name }}</td>
+        <td>{{ s.comment or '—' }}</td>
+        <td>{{ s.submitted_at }}</td>
+        <td>
+          {% if s.status == 'approved' %}
+            <span class="status-badge status-approved">Зачтено</span>
+          {% elif s.status == 'revise' %}
+            <span class="status-badge status-revise">На доработку</span>
+          {% else %}
+            <span class="status-badge status-pending">На проверке</span>
+          {% endif %}
+          {% if s.score is not none %}<span class="score-badge">{{ s.score }}/10</span>{% endif %}
+          {% if s.feedback %}<div class="feedback-box">{{ s.feedback }}</div>{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <div class="empty-state search-empty-state is-hidden">Ничего не найдено.</div>
+  {% else %}
+  <div class="empty-state">Вы ещё не отправляли домашние задания.</div>
+  {% endif %}
+</div>
+
+{% endblock %}
